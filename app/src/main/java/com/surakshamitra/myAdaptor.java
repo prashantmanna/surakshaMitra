@@ -21,7 +21,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textfield.TextInputEditText;
-import com.surakshamitra.database.DBhelper;
+import com.surakshamitra.DBhelper;
 
 import java.util.ArrayList;
 

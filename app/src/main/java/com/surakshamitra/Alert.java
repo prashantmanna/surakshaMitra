@@ -20,8 +20,8 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.textfield.TextInputEditText;
-import com.surakshamitra.database.DBhelper;
-import com.surakshamitra.database.messageSaved;
+import com.surakshamitra.DBhelper;
+import com.surakshamitra.messageSaved;
 
 import java.util.ArrayList;
 

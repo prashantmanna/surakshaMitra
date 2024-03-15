@@ -13,13 +13,13 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.surakshamitra.database.DBhelper;
+import com.surakshamitra.DBhelper;
 import java.util.ArrayList;
 
 public class contactFragment extends Fragment {
 
     private DBhelper dBhelper;
-    private ArrayList<model> arrContact = new ArrayList<>(); // Renamed to avoid confusion
+    private ArrayList<model> arrContact = new ArrayList<>();
     private FloatingActionButton floatingActionButton;
     private myAdaptor adaptor;
 

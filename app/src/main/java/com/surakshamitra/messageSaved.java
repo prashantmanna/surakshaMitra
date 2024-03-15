@@ -1,4 +1,4 @@
-package com.surakshamitra.database;
+package com.surakshamitra;
 
 import android.content.ContentValues;
 import android.content.Context;

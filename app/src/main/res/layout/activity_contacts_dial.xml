@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".contactsDial">
+
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/toolDial"
+        android:background="@color/lavender"
+        >
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolDial"
+        android:layout_above="@+id/navBar1"
+        android:visibility="gone"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewContacts"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolDial"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_above="@+id/navBar1"/>
+
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/navBar1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:background="@drawable/shape1"
+        android:foregroundGravity="center"
+        app:itemBackground="@color/lavender"
+        android:layout_alignParentBottom="true"
+
+        app:menu="@menu/menu_bar"
+        android:elevation="20dp"
+
+        />
+
+</RelativeLayout>

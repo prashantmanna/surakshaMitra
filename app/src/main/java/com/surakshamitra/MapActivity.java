@@ -63,14 +63,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         gps = findViewById(R.id.gps);
 
 
-        if(Places.isInitialized())
-        {
-            Places.initialize(getApplicationContext(),apiKey);
-        }
-
-        PlacesClient placesClient = Places.createClient(MapActivity.this);
-
-
 
         getLocationPermission();
     }

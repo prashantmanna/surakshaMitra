@@ -32,6 +32,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ import java.util.ArrayList;
 public class homefragment extends Fragment {
 
     CardView myLocation;
+    ConstraintLayout policeCall,ambulanceCall,childCall,womenCall;
 
     ImageButton imgBtn1,imgBtn2,imgBtn3,imgBtn4,imgBtn5;
     private static final int MY_SMS_PERMISSION_REQUEST = 2;
@@ -47,6 +49,8 @@ public class homefragment extends Fragment {
     CardView img1, img2, img3, img4;
     LottieAnimationView sendAnime;
     ConstraintLayout cardlocation;
+
+    FloatingActionButton contactsCall;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -68,6 +72,66 @@ public class homefragment extends Fragment {
         sendAnime.animate().setDuration(20).setStartDelay(0);
         cardlocation = view.findViewById(R.id.cardLocation);
         myLocation = view.findViewById(R.id.myLocation);
+
+        contactsCall = view.findViewById(R.id.contactsCall);
+        contactsCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               Intent intent = new Intent(requireContext(),contactsDial.class);
+               startActivity(intent);
+            }
+        });
+
+        policeCall = view.findViewById(R.id.policeCall);
+        ambulanceCall = view.findViewById(R.id.ambulanceCall);
+        childCall = view.findViewById(R.id.childCall);
+        womenCall = view.findViewById(R.id.womenCall);
+
+        ambulanceCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_CALL);
+                intent.setData(Uri.parse("tel:"+"+913864"));
+                startActivity(intent);
+            }
+        });
+
+
+        childCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_CALL);
+                intent.setData(Uri.parse("tel:"+"+912048"));
+                startActivity(intent);
+            }
+        });
+        womenCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_CALL);
+                intent.setData(Uri.parse("tel:"+"+9193846"));
+                startActivity(intent);
+            }
+        });
+
+        policeCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(ActivityCompat.checkSelfPermission(requireContext(),Manifest.permission.CALL_PHONE)== PackageManager.PERMISSION_GRANTED)
+                {
+                    Intent callIntent = new Intent(Intent.ACTION_CALL);
+                    callIntent.setData(Uri.parse("tel:" + "+9170457"));
+                    startActivity(callIntent);
+                }
+
+                else
+                {
+                    askForPermission();
+                    ActivityCompat.requestPermissions(requireActivity(),new String[]{Manifest.permission.CALL_PHONE},1);
+
+                }
+            }
+        });
 
         myLocation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -175,6 +239,8 @@ public class homefragment extends Fragment {
             e.printStackTrace();
         }
     }
+
+
 
     private void askForPermission() {
         ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.CALL_PHONE}, 1);

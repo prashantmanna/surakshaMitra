@@ -45,6 +45,11 @@
         android:theme="@style/Theme.SurakshaMitra"
         tools:targetApi="31">
         <activity
+            android:name=".contactsDial"
+            android:exported="false"
+            android:parentActivityName=".MainActivity">
+        </activity>
+        <activity
             android:name=".MapActivity"
             android:exported="false" />
         <activity

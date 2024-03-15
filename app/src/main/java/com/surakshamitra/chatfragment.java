@@ -17,7 +17,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.surakshamitra.database.messageSaved;
+import com.surakshamitra.messageSaved;
 
 import java.util.ArrayList;
 
