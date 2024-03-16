@@ -58,7 +58,6 @@ public class contactsDial extends AppCompatActivity {
                     frameLayout.setVisibility(View.VISIBLE);
                     getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
-                    // Set custom layout for ActionBar
                     getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
                     getSupportActionBar().setCustomView(R.layout.custom_action_bar_layout);
 

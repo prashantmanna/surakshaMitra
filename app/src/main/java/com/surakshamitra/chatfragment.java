@@ -1,129 +1,87 @@
 package com.surakshamitra;
-
-import android.Manifest;
-import android.content.pm.PackageManager;
+import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
-import android.telephony.SmsManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.surakshamitra.messageSaved;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.surakshamitra.R;
+import com.surakshamitra.UserFragment;
+import com.surakshamitra.contactAdaptor1;
+import com.surakshamitra.DBhelper;
+import com.surakshamitra.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class chatfragment extends Fragment {
 
-    private ArrayList<String> arrChat = new ArrayList<>();
-    private ArrayAdapter<String> adapter;
-    private messageSaved dbHelper;
-    private EditText chatInput;
-
-    private static final int PERMISSION_REQUEST_CODE = 1;
+    private RecyclerView recyclerView;
+    private contactAdaptor1 adapter;
+    private DBhelper dBhelper;
+    private List<model> contacts = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chatfragment, container, false);
 
-        ListView listView = view.findViewById(R.id.listChat);
-        dbHelper = new messageSaved(requireContext());
-        chatInput = view.findViewById(R.id.messageSMS);
+        dBhelper = new DBhelper(requireContext());
+        recyclerView = view.findViewById(R.id.recycler_viewchat);
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
-        loadMessages();
-
-        adapter = new ArrayAdapter<String>(requireContext(), R.layout.customchat, arrChat) {
+        // Implement item click listener
+        contactAdaptor1.OnItemClickListener itemClickListener = new contactAdaptor1.OnItemClickListener() {
             @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                if (convertView == null) {
-                    convertView = LayoutInflater.from(getContext()).inflate(R.layout.customchat, parent, false);
-                }
-
-                final String message = getItem(position);
-
-                TextView textMessage = convertView.findViewById(R.id.customChat1);
-                textMessage.setText(message);
-
-                textMessage.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // Handle click on the custom TextView
-                        sendSms("phoneNumber", message);
-                    }
-                });
-
-                return convertView;
+            public void onItemClick(model contact) {
+                // Open chat interface with the clicked contact
+                openChatWithContact(contact);
             }
         };
 
-        listView.setAdapter(adapter);
-
-        // Floating Action Button click listener
-        FloatingActionButton sendButton = view.findViewById(R.id.fy);
-        sendButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveMessage();
-            }
-        });
+        adapter = new contactAdaptor1(contacts, itemClickListener);
+        recyclerView.setAdapter(adapter);
+        loadExistingData();
 
         return view;
     }
 
-    private void loadMessages() {
-        arrChat.clear();
-        arrChat.addAll(dbHelper.getAllMessages());
+    private void loadExistingData() {
+        contacts.clear(); // Clear existing data to avoid duplication
+        Cursor cursor = dBhelper.readAllData();
+        while (cursor.moveToNext()) {
+            int idIndex = cursor.getColumnIndex("id");
+            int nameIndex = cursor.getColumnIndex("name");
+            int contactIndex = cursor.getColumnIndex("contact");
+
+            String id = cursor.getString(idIndex);
+            String name = cursor.getString(nameIndex);
+            String contact = cursor.getString(contactIndex);
+
+            model newModel = new model(id, R.drawable.user, name, contact);
+            contacts.add(newModel);
+        }
+        adapter.notifyDataSetChanged(); // Notify adapter about data change
     }
 
-    private void saveMessage() {
-        String message = chatInput.getText().toString().trim();
+    // Method to open chat interface with the selected contact
+    private void openChatWithContact(model contact) {
+        // Start UserFragment and pass necessary data
+        FragmentManager fm = requireActivity().getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
 
-        if (!message.isEmpty()) {
 
-            if (dbHelper.addMessage(message)) {
-                chatInput.getText().clear();
-                loadMessages();
-                adapter.notifyDataSetChanged();
-            } else {
-                Toast.makeText(requireContext(), "Failed to save message", Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            Toast.makeText(requireContext(), "Please enter a message", Toast.LENGTH_SHORT).show();
-        }
-    }
+        UserFragment userFragment = UserFragment.newInstance(contact.getContact(), contact.getNumber());
 
-    private void sendSms(String phoneNumber, String message) {
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.SEND_SMS)
-                == PackageManager.PERMISSION_GRANTED) {
-            try {
-                SmsManager smsManager = SmsManager.getDefault();
-                smsManager.sendTextMessage(phoneNumber, null, message, null, null);
-                Toast.makeText(requireContext(), "SMS sent successfully", Toast.LENGTH_SHORT).show();
-            } catch (Exception e) {
-                e.printStackTrace();
-                Toast.makeText(requireContext(), "Failed to send SMS", Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            // Handle the case where SMS permission is not granted
-            Toast.makeText(requireContext(), "SMS permission not granted", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void requestSmsPermission() {
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.SEND_SMS)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(requireActivity(),
-                    new String[]{Manifest.permission.SEND_SMS},
-                    PERMISSION_REQUEST_CODE);
-        }
+        ft.replace(R.id.container, userFragment);
+        ft.addToBackStack(null);
+        ft.commit();
     }
 }

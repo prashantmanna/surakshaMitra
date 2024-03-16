@@ -32,6 +32,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -51,6 +52,7 @@ public class homefragment extends Fragment {
     ConstraintLayout cardlocation;
 
     FloatingActionButton contactsCall;
+    MaterialButton medicalCall,policeCallBtn,womenHelpBtn,childHelpBtn;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -63,6 +65,11 @@ public class homefragment extends Fragment {
         slideModels.add(new SlideModel(R.drawable.women6, ScaleTypes.FIT));
         slideModels.add(new SlideModel(R.drawable.women4, ScaleTypes.FIT));
         imageSlider.setImageList(slideModels, ScaleTypes.FIT);
+
+        medicalCall = view.findViewById(R.id.medicalCall);
+        policeCallBtn = view.findViewById(R.id.policeCallBtn);
+        womenHelpBtn = view.findViewById(R.id.womenHelpBtn);
+        childHelpBtn = view.findViewById(R.id.childHelpBtn);
 
         img1 = view.findViewById(R.id.ambulance);
         img2 = view.findViewById(R.id.police);
@@ -82,45 +89,41 @@ public class homefragment extends Fragment {
             }
         });
 
-        policeCall = view.findViewById(R.id.policeCall);
-        ambulanceCall = view.findViewById(R.id.ambulanceCall);
-        childCall = view.findViewById(R.id.childCall);
-        womenCall = view.findViewById(R.id.womenCall);
 
-        ambulanceCall.setOnClickListener(new View.OnClickListener() {
+        medicalCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_CALL);
-                intent.setData(Uri.parse("tel:"+"+913864"));
+                intent.setData(Uri.parse("tel:"+"+91108"));
                 startActivity(intent);
             }
         });
 
 
-        childCall.setOnClickListener(new View.OnClickListener() {
+        policeCallBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_CALL);
-                intent.setData(Uri.parse("tel:"+"+912048"));
+                intent.setData(Uri.parse("tel:"+"+91112"));
                 startActivity(intent);
             }
         });
-        womenCall.setOnClickListener(new View.OnClickListener() {
+        womenHelpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_CALL);
-                intent.setData(Uri.parse("tel:"+"+9193846"));
+                intent.setData(Uri.parse("tel:"+"+911091"));
                 startActivity(intent);
             }
         });
 
-        policeCall.setOnClickListener(new View.OnClickListener() {
+        childHelpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(ActivityCompat.checkSelfPermission(requireContext(),Manifest.permission.CALL_PHONE)== PackageManager.PERMISSION_GRANTED)
                 {
                     Intent callIntent = new Intent(Intent.ACTION_CALL);
-                    callIntent.setData(Uri.parse("tel:" + "+9170457"));
+                    callIntent.setData(Uri.parse("tel:" + "+911098"));
                     startActivity(callIntent);
                 }
 
@@ -136,15 +139,22 @@ public class homefragment extends Fragment {
         myLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(requireContext(),MapActivity.class);
-                startActivity(intent);
+                FragmentManager fm = getFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.replace(R.id.container,new currentUserLocation());
+                ft.commit();
+
             }
         });
 
         cardlocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getCurrentLocation(); // Trigger getting the current location
+                FragmentManager fm = getFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.replace(R.id.fragment_container,new currentUserLocation());
+                ft.commit();
+                getCurrentLocation();
             }
         });
 
